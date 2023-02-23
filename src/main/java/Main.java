@@ -6,6 +6,7 @@ import java.util.List;
 import controller.ArticleController;
 import controller.AuthorController;
 import controller.MagazineController;
+import controller.MonstruoController;
 import database.ConnectionFactory;
 import model.*;
 import org.hibernate.HibernateException;
@@ -64,21 +65,22 @@ public class Main {
   }
 
   public static void main(String[] args) {
-    ArrayList<Magazine> revistes = new ArrayList();
+    //ArrayList<Magazine> revistes = new ArrayList();
 
     ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
     Connection c = connectionFactory.connect();
-
-//    SessionFactory sessionFactory = buildSessionFactory();
     EntityManagerFactory entityManagerFactory = createEntityManagerFactory();
+
+    //SessionFactory = buildSessionFactory();
     //sessionObj = buildSessionFactory().openSession();
 
+    MonstruoController monstruoController = new MonstruoController(c, entityManagerFactory);
 
-    AuthorController authorController = new AuthorController(c, entityManagerFactory);
-    ArticleController articleController = new ArticleController(c, entityManagerFactory);
-    MagazineController magazineController = new MagazineController(c, entityManagerFactory);
+    //AuthorController = new AuthorController(c, entityManagerFactory);
+    //ArticleController articleController = new ArticleController(c, entityManagerFactory);
+    //MagazineController magazineController = new MagazineController(c, entityManagerFactory);
 
-    Menu menu = new Menu();
+    /*Menu menu = new Menu();
     int opcio;
     opcio = menu.mainMenu();
 
@@ -138,7 +140,7 @@ public class Main {
           for (Article ar : articles) {
             articleController.addArticle(ar);
           }
-*/
+
         } catch (NumberFormatException | IOException e) {
 
           e.printStackTrace();
@@ -150,7 +152,7 @@ public class Main {
         System.exit(1);
         break;
 
-    }
+    }*/
   }
 }
 

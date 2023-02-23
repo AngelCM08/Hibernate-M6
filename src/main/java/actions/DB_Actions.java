@@ -109,13 +109,13 @@ public class DB_Actions {
     /**
      * Función que permite seleccionar el archivo CSV que contiene los datos de relleno de una tabla.
      *
-     * @param tabla Nombre de la tabla la cuál se quieren listar sus columnas.
+     * @param name Nombre del documento del cuál se quiere listar su contenido.
      * @return Lista de arrays de Strings, cada array es una fila de la BBDD.
      */
-    public static List<String[]> GetDataFromCSV(String tabla){
+    public static List<String[]> GetDataFromCSV(String name){
         List<String[]> entities = null;
         try {
-            CSVReader reader = new CSVReader(new FileReader("src/data/"+tabla+".csv"));
+            CSVReader reader = new CSVReader(new FileReader("src/main/resources/"+name+".csv"));
             entities = reader.readAll();
             entities.remove(0);
         } catch (IOException | CsvException e) {

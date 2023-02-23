@@ -57,7 +57,9 @@ public class Personaje implements Serializable {
      * @param velocidad
      * @param suerte
      */
-    public Personaje(int id, String icono, String nombre, int vida, String daño, String cadencia, String vel_proyectil, String rango, String velocidad, int suerte) {
+    public Personaje(int id, String icono, String nombre, int vida, String daño,
+                     String cadencia, String vel_proyectil, String rango,
+                     String velocidad, int suerte) {
         this.id = id;
         this.icono = icono;
         this.nombre = nombre;
@@ -158,8 +160,14 @@ public class Personaje implements Serializable {
      */
     @Override
     public String toString() {
-        return "id-icono-nombre-vida-daño-cadencia-vel_proyectil-rango-velocidad-suerte---" +
-                id + "--" + icono + "--" + nombre + "--" + vida + "--" + daño + "--" + cadencia +
-                "--" + vel_proyectil + "--" + rango + "--" + velocidad + "--" + suerte ;
+        return "idPersonaje: "+id+"\t|\t" +
+                "nombre: "+nombre+"\t|\t" +
+                "vida: "+vida+"\t|\t" +
+                "daño: "+daño+"\t|\t" +
+                "cadencia: "+cadencia+"\t|\t" +
+                "vel_proyectil: "+vel_proyectil+"\t|\t" +
+                "rango: "+rango+"\t|\t" +
+                "velocidad: "+velocidad+"\t|\t" +
+                "suerte: "+suerte;
     }
 }

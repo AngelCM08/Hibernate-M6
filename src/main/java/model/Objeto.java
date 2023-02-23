@@ -74,7 +74,9 @@ public class Objeto implements Serializable {
 
     @Override
     public String toString() {
-        return "id-icono-nombre-descripcion---" +
-                id + "--" + icono + "--" + nombre + "--" + descripcion;
+        return "idObjeto: "+id+"\t|\t" +
+                "nombre: "+nombre+"\t|\t" +
+                "descripcion: "+descripcion+"\t|\t" +
+                "icono: "+icono;
     }
 }

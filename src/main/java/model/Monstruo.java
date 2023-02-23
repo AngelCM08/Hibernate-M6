@@ -98,7 +98,10 @@ public class Monstruo implements Serializable {
      */
     @Override
     public String toString() {
-        return "id-icono-nombre-vida-descripcion---" +
-                id + "--" + icono + "--" + nombre + "--" + vida + "--" + descripcion;
+        return "idmonstruo: "+id+"\t|\t" +
+               "nombre: "+nombre+"\t|\t" +
+               "vida: "+vida+"\t|\t" +
+               "descripcion: "+descripcion+"\t|\t" +
+               "icono: "+icono;
     }
 }
