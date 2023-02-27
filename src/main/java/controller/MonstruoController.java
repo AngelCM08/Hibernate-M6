@@ -1,19 +1,21 @@
 package controller;
 
 import actions.DB_Actions;
-import model.Author;
+import model.Monstruo;
 import model.Monstruo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Scanner;
 
 public class MonstruoController {
     private Connection connection;
     private EntityManagerFactory entityManagerFactory;
-
+    Scanner sc = new Scanner(System.in);
     public MonstruoController(Connection connection) {
         this.connection = connection;
     }
@@ -33,7 +35,7 @@ public class MonstruoController {
         return listMonstruo;
     }
 
-    public static void printMonstruos(){
+    public static void printMonstruosFromFile(){
         readMonstruoFile().forEach(System.out::println);
     }
 
@@ -41,9 +43,9 @@ public class MonstruoController {
     public void addMonstruo(Monstruo monstruo) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
-        Monstruo MonstruoExists = (Monstruo) em.find(Monstruo.class, monstruo.getId());
+        Monstruo MonstruoExists = em.find(Monstruo.class, monstruo.getId());
         if (MonstruoExists == null) {
-            System.out.println("insert autor");
+            System.out.println("insert monstruo");
             em.persist(monstruo);
         }
         em.getTransaction().commit();
@@ -55,37 +57,43 @@ public class MonstruoController {
     public void listMonstruos() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
-        List<Author> result = em.createQuery("from Author", Author.class)
-                .getResultList();
-        for (Author author : result) {
-            System.out.println(author.toString());
+        List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
+        for (Monstruo monstruo : result) {
+            System.out.println(monstruo.toString());
         }
         em.getTransaction().commit();
         em.close();
     }
 
     /* Method to UPDATE activity for an Monstruo */
-    public void updateMonstruo(Integer authorId, boolean active) {
+    public void updateMonstruo(Integer monstruoId, String column) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
-        Author author = (Author) em.find(Author.class, authorId);
-        author.setActive(active);
-        em.merge(author);
+        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
+        System.out.print("Indica el dato modificado: ");
+        switch (column) {
+            case "icono" -> monstruo.setIcono(sc.nextLine());
+            case "nombre" -> monstruo.setNombre(sc.nextLine());
+            case "vida" -> {
+                monstruo.setVida(sc.nextInt());
+                sc.nextLine();
+            }
+            case "descripcion" -> monstruo.setDescripcion(sc.nextLine());
+        }
+        em.merge(monstruo);
         em.getTransaction().commit();
         em.close();
+        listMonstruos();
     }
 
     /* Method to DELETE an Monstruo from the records */
-    public void deleteMonstruo(Integer authorId) {
+    public void deleteMonstruo(Integer monstruoId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
-        Author author = (Author) em.find(Author.class, authorId);
-        em.remove(author);
+        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
+        em.remove(monstruo);
         em.getTransaction().commit();
         em.close();
-    }
-
-    public static void main(String[] args) {
-
     }
 }

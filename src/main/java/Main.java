@@ -56,7 +56,7 @@ public class Main {
   public static EntityManagerFactory createEntityManagerFactory(){
     EntityManagerFactory emf;
     try {
-      emf = Persistence.createEntityManagerFactory("JPAMagazines");
+      emf = Persistence.createEntityManagerFactory("tboia");
     } catch (Throwable ex) {
       System.err.println("Failed to create EntityManagerFactory object."+ ex);
       throw new ExceptionInInitializerError(ex);
@@ -75,6 +75,9 @@ public class Main {
     //sessionObj = buildSessionFactory().openSession();
 
     MonstruoController monstruoController = new MonstruoController(c, entityManagerFactory);
+    monstruoController.addMonstruo(new Monstruo(195, "icono2", "nombreMonstruo2", 8, "Descripcion2"));
+    monstruoController.listMonstruos();
+    monstruoController.updateMonstruo(195, "nombre");
 
     //AuthorController = new AuthorController(c, entityManagerFactory);
     //ArticleController articleController = new ArticleController(c, entityManagerFactory);
