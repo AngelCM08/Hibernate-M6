@@ -75,10 +75,12 @@ public class Main {
     //sessionObj = buildSessionFactory().openSession();
 
     MonstruoController monstruoController = new MonstruoController(c, entityManagerFactory);
-    monstruoController.addMonstruo(new Monstruo(195, "icono2", "nombreMonstruo2", 8, "Descripcion2"));
+    monstruoController.addMonstruo(new Monstruo(196, "icono2", "nombreMonstruo2", 8, "Descripcion2"));
+    /*monstruoController.listMonstruos();
+    monstruoController.updateMonstruo(196, "nombre");
     monstruoController.listMonstruos();
-    monstruoController.updateMonstruo(195, "nombre");
-
+    monstruoController.deleteMonstruo(196);
+    monstruoController.listMonstruos();*/
     //AuthorController = new AuthorController(c, entityManagerFactory);
     //ArticleController articleController = new ArticleController(c, entityManagerFactory);
     //MagazineController magazineController = new MagazineController(c, entityManagerFactory);

@@ -20,6 +20,7 @@ public class Objeto implements Serializable {
     @Column(name = "descripcion", length = 500)
     String descripcion;
 
+
     /**
      * Constrctor simple de la Clase necesario para el formateado a XML.
      */

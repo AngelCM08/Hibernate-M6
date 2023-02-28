@@ -66,7 +66,7 @@ public class MonstruoController {
         em.close();
     }
 
-    /* Method to UPDATE activity for an Monstruo */
+    /* Method to UPDATE activity for Monstruo */
     public void updateMonstruo(Integer monstruoId, String column) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -87,7 +87,7 @@ public class MonstruoController {
         listMonstruos();
     }
 
-    /* Method to DELETE an Monstruo from the records */
+    /* Method to DELETE Monstruo from the records */
     public void deleteMonstruo(Integer monstruoId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
