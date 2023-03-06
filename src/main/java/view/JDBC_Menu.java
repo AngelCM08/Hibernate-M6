@@ -130,9 +130,8 @@ public class JDBC_Menu {
 			System.out.println(" \nQUE TIPO DE ACCIÓN QUIERES REALIZAR\n");
 
 			System.out.println("1. Seleccionar todos los elementos que contengan un texto concreto.");
-			System.out.println("2. Seleccionar todos los elementos que cumplan una condición.");
-			System.out.println("3. Seleccionar una columna.");
-			System.out.println("4. Atrás.");
+			System.out.println("2. Seleccionar una columna.");
+			System.out.println("3. Atrás.");
 			System.out.print("Escoger opción: ");
 
 			try{

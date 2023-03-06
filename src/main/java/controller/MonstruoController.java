@@ -2,7 +2,6 @@ package controller;
 
 import actions.DB_Actions;
 import model.Monstruo;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.lang.reflect.Field;
@@ -13,6 +12,10 @@ public class MonstruoController {
     private Connection connection;
     private EntityManagerFactory entityManagerFactory;
     Scanner sc = new Scanner(System.in);
+    int maxIndex;
+    List<String> nameCols;
+    List<String> dataTypeCols;
+
     public MonstruoController(Connection connection) {
         this.connection = connection;
     }
