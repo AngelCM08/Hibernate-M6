@@ -2,15 +2,12 @@ package controller;
 
 import actions.DB_Actions;
 import model.Monstruo;
-import model.Monstruo;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import java.lang.reflect.Field;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 
 public class MonstruoController {
     private Connection connection;
@@ -67,10 +64,32 @@ public class MonstruoController {
     }
 
     /* Method to UPDATE activity for Monstruo */
-    public void updateMonstruo(Integer monstruoId, String column) {
+    public void updateOneElementMonstruo(Integer monstruoId, String column) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         Monstruo monstruo = em.find(Monstruo.class, monstruoId);
+        System.out.print("Indica el dato modificado: ");
+        switch (column) {
+            case "icono" -> monstruo.setIcono(sc.nextLine());
+            case "nombre" -> monstruo.setNombre(sc.nextLine());
+            case "vida" -> {
+                monstruo.setVida(sc.nextInt());
+                sc.nextLine();
+            }
+            case "descripcion" -> monstruo.setDescripcion(sc.nextLine());
+        }
+        em.merge(monstruo);
+        em.getTransaction().commit();
+        em.close();
+        listMonstruos();
+    }
+
+    public void updateManyElementsMonstruo(Integer monstruoId) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
+        List<Field> elements = Arrays.asList(Monstruo.class.getDeclaredFields());
+        elements.forEach(field -> System.out.println(field.toString()));
         System.out.print("Indica el dato modificado: ");
         switch (column) {
             case "icono" -> monstruo.setIcono(sc.nextLine());

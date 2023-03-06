@@ -3,10 +3,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import controller.ArticleController;
-import controller.AuthorController;
-import controller.MagazineController;
-import controller.MonstruoController;
+import controller.*;
 import database.ConnectionFactory;
 import model.*;
 import org.hibernate.HibernateException;
@@ -75,12 +72,29 @@ public class Main {
     //sessionObj = buildSessionFactory().openSession();
 
     MonstruoController monstruoController = new MonstruoController(c, entityManagerFactory);
-    monstruoController.addMonstruo(new Monstruo(196, "icono2", "nombreMonstruo2", 8, "Descripcion2"));
-    /*monstruoController.listMonstruos();
-    monstruoController.updateMonstruo(196, "nombre");
+    /*monstruoController.addMonstruo(new Monstruo(196, "icono2", "nombreMonstruo2", 8, "Descripcion2"));
+    monstruoController.listMonstruos();
+    monstruoController.updateOneElementMonstruo(196, "nombre");
     monstruoController.listMonstruos();
     monstruoController.deleteMonstruo(196);
     monstruoController.listMonstruos();*/
+    monstruoController.updateManyElementsMonstruo(195);
+
+    /*ObjetoController objetoController = new ObjetoController(c, entityManagerFactory);
+    objetoController.addObjeto(new Objeto(718, "icono", "nombreObjeto", "DescripcionObjeto"));
+    objetoController.listObjetos();
+    objetoController.updateObjeto(718, "nombre");
+    objetoController.listObjetos();
+    objetoController.deleteObjeto(718);
+    objetoController.listObjetos();
+
+    PersonajeController personajeController = new PersonajeController(c, entityManagerFactory);
+    personajeController.addPersonaje(new Personaje(35, "icono","nombre", 2, "2.3", "2.3", "2.3", "2.3", "2.3", 2));
+    personajeController.listPersonajes();
+    personajeController.updatePersonaje(35, "nombre");
+    personajeController.listPersonajes();
+    personajeController.deletePersonaje(35);
+    personajeController.listPersonajes();*/
     //AuthorController = new AuthorController(c, entityManagerFactory);
     //ArticleController articleController = new ArticleController(c, entityManagerFactory);
     //MagazineController magazineController = new MagazineController(c, entityManagerFactory);

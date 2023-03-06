@@ -3,9 +3,12 @@ package model;
 import javax.persistence.*;
 import java.io.Serializable;
 
+@Entity
+@Access(AccessType.FIELD)
+@Table(name = "personaje")
 public class Personaje implements Serializable {
     @Id
-    @Column(name = "idmonstruo")
+    @Column(name = "idpersonaje")
     int id;
 
     @Column(name = "icono", length = 500)
@@ -17,22 +20,22 @@ public class Personaje implements Serializable {
     @Column(name = "vida")
     int vida;
 
-    @Column(name = "nombre", length = 45)
+    @Column(name = "daño", length = 45)
     private String daño;
 
-    @Column(name = "nombre", length = 45)
+    @Column(name = "cadencia", length = 45)
     private String cadencia;
 
-    @Column(name = "nombre", length = 45)
+    @Column(name = "vel_proyectil", length = 45)
     private String vel_proyectil;
 
-    @Column(name = "nombre", length = 45)
+    @Column(name = "rango", length = 45)
     private String rango;
 
-    @Column(name = "nombre", length = 45)
+    @Column(name = "velocidad", length = 45)
     private String velocidad;
 
-    @Column(name = "nombre", length = 45)
+    @Column(name = "suerte", length = 45)
     private int suerte;
 
     /**
