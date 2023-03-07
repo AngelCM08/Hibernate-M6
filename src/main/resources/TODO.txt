@@ -1,3 +1,0 @@
-//TODO Relaciones One To Many de las tablas.
-//TODO Pasar funciones específicas de las tablas a los controllers y en Hibernate.
-//TODO Pasar funciones generales (DB_Actions) de las tablas a los controllers y en Hibernate.

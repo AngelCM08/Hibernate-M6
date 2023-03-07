@@ -9,12 +9,11 @@ import java.sql.Connection;
 import java.util.*;
 
 public class MonstruoController {
-    private Connection connection;
-    private EntityManagerFactory entityManagerFactory;
+    public Connection connection;
+    public EntityManagerFactory entityManagerFactory;
     Scanner sc = new Scanner(System.in);
-    int maxIndex;
-    List<String> nameCols;
-    List<String> dataTypeCols;
+    public List<String> colsName = new ArrayList<>();
+    public List<String> colsDataType = new ArrayList<>();
 
     public MonstruoController(Connection connection) {
         this.connection = connection;
@@ -23,12 +22,12 @@ public class MonstruoController {
     public MonstruoController(Connection connection, EntityManagerFactory entityManagerFactory) {
         this.connection = connection;
         this.entityManagerFactory = entityManagerFactory;
+        setHeaders();
     }
 
     public static List<Monstruo> readMonstruoFile(){
         List<Monstruo> listMonstruo = new ArrayList<>();
         List<String[]> listCSV = DB_Actions.GetDataFromCSV("monstruo");
-
         listCSV.forEach(row -> {
             listMonstruo.add(new Monstruo(Integer.parseInt(row[0]),row[1],row[2],Integer.parseInt(row[3]),row[4]));
         });
@@ -51,7 +50,6 @@ public class MonstruoController {
         em.getTransaction().commit();
         em.close();
     }
-
 
     /* Method to READ all Monstruo */
     public void listMonstruos() {
@@ -94,7 +92,7 @@ public class MonstruoController {
         List<Field> elements = Arrays.asList(Monstruo.class.getDeclaredFields());
         elements.forEach(field -> System.out.println(field.toString()));
         System.out.print("Indica el dato modificado: ");
-        switch (column) {
+        /*switch (column) {
             case "icono" -> monstruo.setIcono(sc.nextLine());
             case "nombre" -> monstruo.setNombre(sc.nextLine());
             case "vida" -> {
@@ -102,7 +100,7 @@ public class MonstruoController {
                 sc.nextLine();
             }
             case "descripcion" -> monstruo.setDescripcion(sc.nextLine());
-        }
+        }*/
         em.merge(monstruo);
         em.getTransaction().commit();
         em.close();
@@ -117,5 +115,60 @@ public class MonstruoController {
         em.remove(monstruo);
         em.getTransaction().commit();
         em.close();
+    }
+
+    /* Method to delete Monstruo's table data */
+    public void deleteMonstruoTableData() {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
+        for (Monstruo monstruo : result) {
+            deleteMonstruo(monstruo.getId());
+        }
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    /* Method to select Monstruo's table column */
+    public void selectMonstruoTableColumn(int column) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
+        for (Monstruo monstruo : result) {
+            switch (column) {
+                case 0 -> System.out.println(monstruo.getId());
+                case 1 -> System.out.println(monstruo.getIcono());
+                case 2 -> System.out.println(monstruo.getNombre());
+                case 3 -> System.out.println(monstruo.getVida());
+                case 4 -> System.out.println(monstruo.getDescripcion());
+            }
+        }
+
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    // ************** UTILS ***************
+    /* Method to get the last Monstruo ID */
+    public int getMonstruosLastId() {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
+        em.getTransaction().commit();
+        em.close();
+        return result.size();
+    }
+
+    public void setHeaders() {
+        Monstruo monstruo = new Monstruo();
+        List<Field> fields = Arrays.asList(monstruo.getClass().getDeclaredFields());
+        for (Field field : fields){
+            colsName.add(field.getName());
+            if(field.getType().getName().equals("java.lang.String")) colsDataType.add("String");
+            else colsDataType.add("int");
+        }
     }
 }

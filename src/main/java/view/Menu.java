@@ -32,19 +32,18 @@ public class Menu {
             System.out.println("7. Modificar elementos de un registro.");
             System.out.println("8. Modificar registros según condición.");
             System.out.println("9. Eliminar registro de una tabla.");
-            System.out.println("10. Eliminar tabla.");
-            System.out.println("11. Vaciar tablas.");
-            System.out.println("12. Salir.");
+            System.out.println("10. Vaciar tablas.");
+            System.out.println("11. Salir.");
             System.out.print("Escoger opción: ");
             try{
                 option = Integer.parseInt(sc.nextLine());
-                if(option < 1 || option > 12){
+                if(option < 1 || option > 11){
                     System.out.println("\n*** Indica un valor númerico válido. ***");
                 }
             }catch(Exception e){
                 System.out.println("\n*** Selecciona una opción válida. ***");
             }
-        }while(option < 1 || option > 12);
+        }while(option < 1 || option > 11);
         return option;
     }
 
@@ -82,33 +81,27 @@ public class Menu {
     }
 
     /**
-     * Función que muestra un listado de todas las columnas de la tabla pasada por parámetro.
+     * Función que muestra un listado de todas las columnas de una tabla.
      * Permite al usuario escoger que columna quiere seleccionar.
      *
-     * @param c Objeto de la conexión con la BBDD.
-     * @param tabla Nombre de la tabla la cuál se quieren listar sus columnas.
-     * @return Array que contiene 2 strings, en el primer valor se encuentra el nombre de la columna seleccionada,
-     * en el segundo indica el tipo de dato que es ésa columna en la BBDD.
+     * @param colsName Lista de columnas de la tabla las cuáles se quieren listar.
      */
-    public String[] ColumnsMenu(Connection c, String tabla) {
-        List<List<String>> header = DB_Actions.GetHeader(c, tabla);
-
-        for (int i = 0; i < header.get(0).size(); i++) {
-            System.out.println(i+". "+header.get(0).get(i));
-        }
+    public int listHeader(List<String> colsName){
         do{
-            option = -1;
-            System.out.println("Indica el valor de la columna que quieres seleccionar:");
-
+            for (int i = 0; i < colsName.size(); i++) {
+                System.out.println(i + ". " + colsName.get(i));
+            }
+            System.out.print("Indica el valor de la columna que quieres seleccionar: ");
             try{
                 option = Integer.parseInt(sc.nextLine());
-                if(option < 0 || option >= header.get(0).size()){
+                if(option < 0 || option >= colsName.size()){
                     System.out.println("\n*** Indica un valor númerico válido. ***");
                 }
             }catch(Exception e){
                 System.out.println("\n*** Indica un valor númerico válido. ***");
             }
-        }while(option < 0 || option >= header.get(0).size());
-        return new String[]{header.get(0).get(option), header.get(1).get(option)};
+        }while (option < 0 || option >= colsName.size());
+
+        return option;
     }
 }
