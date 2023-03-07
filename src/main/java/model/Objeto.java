@@ -2,6 +2,8 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -20,6 +22,8 @@ public class Objeto implements Serializable {
     @Column(name = "descripcion", length = 500)
     String descripcion;
 
+    @ManyToMany(mappedBy = "objetoEquipado")
+    public List<Personaje> personajeQueEquipa = new ArrayList<>();
 
     /**
      * Constrctor simple de la Clase necesario para el formateado a XML.
@@ -71,6 +75,14 @@ public class Objeto implements Serializable {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public List<Personaje> getPersonajeQueEquipa() {
+        return personajeQueEquipa;
+    }
+
+    public void setPersonajeQueEquipa(List<Personaje> personajeQueEquipa) {
+        this.personajeQueEquipa = personajeQueEquipa;
     }
 
     @Override

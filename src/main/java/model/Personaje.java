@@ -2,6 +2,8 @@ package model;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Access(AccessType.FIELD)
@@ -37,6 +39,16 @@ public class Personaje implements Serializable {
 
     @Column(name = "suerte", length = 45)
     private int suerte;
+
+    @ManyToMany(cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
+    @JoinTable(name = "equipar",
+            joinColumns = @JoinColumn(name = "idpersonaje"),
+            inverseJoinColumns = @JoinColumn(name = "idobjeto")
+    )
+    private List<Objeto> objetoEquipado = new ArrayList<>();
 
     /**
      * Constrctor simple de la Clase necesario para el formateado a XML.
@@ -153,6 +165,14 @@ public class Personaje implements Serializable {
 
     public void setSuerte(int suerte) {
         this.suerte = suerte;
+    }
+
+    public List<Objeto> getObjetoEquipado() {
+        return objetoEquipado;
+    }
+
+    public void setObjetoEquipado(List<Objeto> objetoEquipado) {
+        this.objetoEquipado = objetoEquipado;
     }
 
     /**

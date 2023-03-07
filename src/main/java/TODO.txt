@@ -1,3 +1,4 @@
+// TODO Montar el switch del Main bien.
 // TODO Insertar en la BBDD desde los csv. (Deberia ser aprovechar la función readClassFile() para obtener la List<Class> y montar una función específica para crear la tabla)
 // TODO Llamar desde el constructor a la función que rellene las dos listas del controlador con el nombre de la columna y el tipo de dato.
 // TODO Obtener el id màximo y guardarlo en la clase. (Ver en que momento se puede rellenar éste valor y donde se deberia actualizar.)
@@ -10,10 +11,6 @@
 // TODO Menú principal.
 // TODO Menú de tablas.
 // TODO Menú de columnas.
-// TODO Menú de eliminación de tabla o registros.
-// TODO Menú de actualizaciones.
 // TODO Usar quizás SelectFieldMenu() ???
-// TODO Unificar os menús.
-
-
-
+// TODO Montar relacion ManyToMany entre Personaje y Objeto.
+// TODO Funcion para rellenar la tabla intermedia.
