@@ -11,7 +11,7 @@ List<Monstruo> monstruos = query.getResultList();
  especificado por el parámetro "valorAntiguo". Luego, el valor de esa columna se actualiza con el
  valor nuevo especificado por el parámetro "valorNuevo".
 
-public void actualizarRegistros(String nombreTabla, String nombreColumna, String valorAntiguo, String valorNuevo) {
+public void updateRegistersByCondition(String nombreTabla, String nombreColumna, String valorAntiguo, String valorNuevo) {
     EntityManager entityManager = // Obtener el EntityManager
 
     Query query = entityManager.createQuery("UPDATE " + nombreTabla + " SET "
@@ -28,7 +28,7 @@ public void actualizarRegistros(String nombreTabla, String nombreColumna, String
     System.out.println(numFilasActualizadas + " registros actualizados.");
 }
 
-// TODO Equivalencia a deleteTableRegisterByCondition() (DB_Deletes)
+// TO DO Equivalencia a deleteTableRegisterByCondition() (DB_Deletes)
 Selecciona los registros de Monstruo que coinciden con el nombre proporcionado.
 Luego, itera a través de la lista resultante y elimina cada Monstruo
 

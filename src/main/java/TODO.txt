@@ -4,7 +4,7 @@
 // TODO Equivalencia a selectSpecificText() (DB_Selects)
 // TO DO Seleccionar una sola columna (DB_Selects)
 // TODO Equivalencia a updateRegistersByCondition() (DB_Updates)
-// TODO Equivalencia a deleteTableRegisterByCondition() (DB_Deletes)
+// TO DO Equivalencia a deleteTableRegisterByCondition() (DB_Deletes)
 // TO DO Vacíar tabla.
 // TO DO Menú principal.
 // TO DO Menú de tablas.

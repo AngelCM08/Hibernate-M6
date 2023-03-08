@@ -2,8 +2,8 @@ package controller;
 
 import actions.DB_Actions;
 import model.Monstruo;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+
+import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.*;
@@ -85,26 +85,39 @@ public class MonstruoController {
         listMonstruos();
     }
 
-    public void updateManyElementsMonstruo(Integer monstruoId) {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
-        List<Field> elements = Arrays.asList(Monstruo.class.getDeclaredFields());
-        elements.forEach(field -> System.out.println(field.toString()));
-        System.out.print("Indica el dato modificado: ");
-        /*switch (column) {
-            case "icono" -> monstruo.setIcono(sc.nextLine());
-            case "nombre" -> monstruo.setNombre(sc.nextLine());
-            case "vida" -> {
-                monstruo.setVida(sc.nextInt());
-                sc.nextLine();
+    public void updateRegistersByCondition(String nombreColumna) {
+        EntityManager em = null;
+        EntityTransaction transaction = null;
+
+        System.out.print("Cuál es el texto que quieres actualizar: ");
+        String valorNuevo = sc.nextLine();
+        System.out.print("Cuál es el texto actualizado: ");
+        String valorAntiguo = sc.nextLine();
+
+        try {
+            em = entityManagerFactory.createEntityManager();
+            transaction = em.getTransaction();
+            transaction.begin();
+
+            // Seleccionar el monstruo que coincide con el nombre proporcionado
+            TypedQuery<Monstruo> query = em.createQuery("UPDATE monstruo SET "+ nombreColumna +
+                                                            " = :valorNuevo WHERE " + nombreColumna +
+                                                            " = :valorAntiguo", Monstruo.class);
+            query.setParameter("valorNuevo", valorNuevo);
+            query.setParameter("valorAntiguo", valorAntiguo);
+            int numFilasActualizadas = query.executeUpdate();
+            transaction.commit();
+            System.out.println(numFilasActualizadas + " registros actualizados.");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-            case "descripcion" -> monstruo.setDescripcion(sc.nextLine());
-        }*/
-        em.merge(monstruo);
-        em.getTransaction().commit();
-        em.close();
-        listMonstruos();
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     /* Method to DELETE Monstruo from the records */
@@ -128,6 +141,39 @@ public class MonstruoController {
         }
         em.getTransaction().commit();
         em.close();
+    }
+
+    /* DELETE by text */
+    public void eliminarMonstruoPorCondicionDeTexto(String columna) {
+        EntityManager em = null;
+        EntityTransaction transaction = null;
+
+        try {
+            em = entityManagerFactory.createEntityManager();
+            transaction = em.getTransaction();
+            transaction.begin();
+
+            System.out.print("Cuál es el texto condición para eliminar los registros: ");
+            // Seleccionar el monstruo que coincide con el nombre proporcionado
+            TypedQuery<Monstruo> query = em.createQuery(
+                    "SELECT m FROM Monstruo m WHERE "+columna+" LIKE :texto", Monstruo.class);
+            query.setParameter("texto", sc.nextLine());
+            List<Monstruo> monstruos = query.getResultList();
+            // Eliminar el monstruo
+            for (Monstruo m : monstruos) {
+                em.remove(m);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
     }
 
     /* Method to select Monstruo's table column */

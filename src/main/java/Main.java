@@ -8,6 +8,10 @@ import java.util.stream.Collectors;
 
 import controller.*;
 import database.ConnectionFactory;
+import org.hibernate.SQLQuery;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import view.Menu;
 
 import javax.persistence.EntityManagerFactory;
@@ -35,7 +39,10 @@ public class Main {
         PersonajeController personajeController = new PersonajeController(c, entityManagerFactory);
 
         Menu menu = new Menu();
-        monstruoController.selectMonstruoTableColumn(menu.listHeader(monstruoController.colsName));
+        //monstruoController.selectMonstruoTableColumn(menu.listHeader(monstruoController.colsName));
+        monstruoController.listMonstruos();
+        monstruoController.updateRegistersByCondition("vida");
+        monstruoController.listMonstruos();
         /*monstruoController.addMonstruo(new Monstruo(194, "iconoTest", "nombreMonstruo2", 8, "Descripcion2"));
         monstruoController.listMonstruos();
         monstruoController.updateOneElementMonstruo(196, "nombre");
