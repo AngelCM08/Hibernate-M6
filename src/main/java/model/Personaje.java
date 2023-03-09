@@ -183,6 +183,7 @@ public class Personaje implements Serializable {
      */
     @Override
     public String toString() {
+        String objetosEquipados = getObjetoEquipado().toString();
         return "idPersonaje: "+id+"\t|\t" +
                 "nombre: "+nombre+"\t|\t" +
                 "vida: "+vida+"\t|\t" +
@@ -191,6 +192,7 @@ public class Personaje implements Serializable {
                 "vel_proyectil: "+vel_proyectil+"\t|\t" +
                 "rango: "+rango+"\t|\t" +
                 "velocidad: "+velocidad+"\t|\t" +
-                "suerte: "+suerte;
+                "suerte: "+suerte+"\t|\t" +
+                "Objetos Equipados: ["+getObjetoEquipado().toString()+"]";
     }
 }

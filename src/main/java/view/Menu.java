@@ -1,8 +1,6 @@
 package view;
 
-import actions.DB_Actions;
-
-import java.sql.Connection;
+import model.*;
 import java.util.List;
 import java.util.Scanner;
 
@@ -29,21 +27,22 @@ public class Menu {
             System.out.println("4. Seleccionar elementos que contengan un texto.");
             System.out.println("5. Insertar registro.");
             System.out.println("6. Equipar objeto a personaje.");
-            System.out.println("7. Modificar elementos de un registro.");
+            System.out.println("7. Modificar atributos de un registro.");
             System.out.println("8. Modificar registros según condición.");
             System.out.println("9. Eliminar registro de una tabla.");
-            System.out.println("10. Vaciar tablas.");
-            System.out.println("11. Salir.");
+            System.out.println("10. Eliminar registro por condicion.");
+            System.out.println("11. Vaciar tablas.");
+            System.out.println("12. Salir.");
             System.out.print("Escoger opción: ");
             try{
                 option = Integer.parseInt(sc.nextLine());
-                if(option < 1 || option > 11){
+                if(option < 1 || option > 12){
                     System.out.println("\n*** Indica un valor númerico válido. ***");
                 }
             }catch(Exception e){
                 System.out.println("\n*** Selecciona una opción válida. ***");
             }
-        }while(option < 1 || option > 11);
+        }while(option < 1 || option > 12);
         return option;
     }
 
@@ -88,7 +87,7 @@ public class Menu {
      */
     public int listHeader(List<String> colsName){
         do{
-            for (int i = 0; i < colsName.size(); i++) {
+            for (int i = 1; i < colsName.size(); i++) {
                 System.out.println(i + ". " + colsName.get(i));
             }
             System.out.print("Indica el valor de la columna que quieres seleccionar: ");
@@ -102,6 +101,57 @@ public class Menu {
             }
         }while (option < 0 || option >= colsName.size());
 
+        return option;
+    }
+
+    public int selectPersonajeId(List<Personaje> list) {
+        Scanner sc = new Scanner(System.in);
+        list.forEach(System.out::println);
+        do {
+            System.out.print("Indica el ID del registro que quieres seleccionar: ");
+            try {
+                option = Integer.parseInt(sc.nextLine());
+                if (option < 0 || option > list.size()) {
+                    System.out.println("\n*** Indica un valor númerico válido. ***");
+                }
+            } catch (Exception e) {
+                System.out.println("\n*** Indica un valor númerico válido. ***");
+            }
+        } while (option < 0 || option > list.size());
+        return option;
+    }
+
+    public int selectMonstruoId(List<Monstruo> list) {
+        Scanner sc = new Scanner(System.in);
+        list.forEach(System.out::println);
+        do {
+            System.out.print("Indica el ID del registro que quieres seleccionar: ");
+            try {
+                option = Integer.parseInt(sc.nextLine());
+                if (option < 0 || option > list.size()) {
+                    System.out.println("\n*** Indica un valor númerico válido. ***");
+                }
+            } catch (Exception e) {
+                System.out.println("\n*** Indica un valor númerico válido. ***");
+            }
+        } while (option < 0 || option > list.size());
+        return option;
+    }
+
+    public int selectObjetoId(List<Objeto> list) {
+        Scanner sc = new Scanner(System.in);
+        list.forEach(System.out::println);
+        do {
+            System.out.print("Indica el ID del registro que quieres seleccionar: ");
+            try {
+                option = Integer.parseInt(sc.nextLine());
+                if (option < 0 || option > list.size()) {
+                    System.out.println("\n*** Indica un valor númerico válido. ***");
+                }
+            } catch (Exception e) {
+                System.out.println("\n*** Indica un valor númerico válido. ***");
+            }
+        } while (option < 0 || option > list.size());
         return option;
     }
 }

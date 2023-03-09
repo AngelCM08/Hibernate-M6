@@ -1,17 +1,8 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.stream.Collectors;
 
 import controller.*;
 import database.ConnectionFactory;
-import org.hibernate.SQLQuery;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import view.Menu;
 
 import javax.persistence.EntityManagerFactory;
@@ -34,77 +25,107 @@ public class Main {
         Connection c = connectionFactory.connect();
         EntityManagerFactory entityManagerFactory = createEntityManagerFactory();
 
+        PersonajeController personajeController = new PersonajeController(c, entityManagerFactory);
         MonstruoController monstruoController = new MonstruoController(c, entityManagerFactory);
         ObjetoController objetoController = new ObjetoController(c, entityManagerFactory);
-        PersonajeController personajeController = new PersonajeController(c, entityManagerFactory);
 
         Menu menu = new Menu();
-        //monstruoController.selectMonstruoTableColumn(menu.listHeader(monstruoController.colsName));
-        monstruoController.listMonstruos();
-        monstruoController.updateRegistersByCondition("vida");
-        monstruoController.listMonstruos();
-        /*monstruoController.addMonstruo(new Monstruo(194, "iconoTest", "nombreMonstruo2", 8, "Descripcion2"));
-        monstruoController.listMonstruos();
-        monstruoController.updateOneElementMonstruo(196, "nombre");
-        monstruoController.listMonstruos();
-        monstruoController.deleteMonstruo(196);
-        monstruoController.listMonstruos();
-        monstruoController.updateManyElementsMonstruo(195);
 
-        objetoController.addObjeto(new Objeto(718, "icono", "nombreObjeto", "DescripcionObjeto"));
-        objetoController.listObjetos();
-        objetoController.updateObjeto(718, "nombre");
-        objetoController.listObjetos();
-        objetoController.deleteObjeto(718);
-        objetoController.listObjetos();
-
-        personajeController.addPersonaje(new Personaje(35, "icono","nombre", 2, "2.3", "2.3", "2.3", "2.3", "2.3", 2));
-        personajeController.listPersonajes();
-        personajeController.updatePersonaje(35, "nombre");
-        personajeController.listPersonajes();
-        personajeController.deletePersonaje(35);
-        personajeController.listPersonajes();*/
-
-        /*Menu menu = new Menu();
+        int id;
         int option = menu.mainMenu();
 
-        while (option != 11) {
+        while (option != 12) {
             switch (option) {
                 case 1: // Poblar o restaurar tablas. // Con Statement porque es lo que hay, Hibernate va raro pa esto.
-                    try {
-                        Statement st = c.createStatement();
-                        BufferedReader br = new BufferedReader(new FileReader("src/data/schema.sql"));
-                        st.execute(br.lines().collect(Collectors.joining(" \n")));
-                    } catch (FileNotFoundException | SQLException e) {
-                        System.out.println("\n**** ERROR! LA TAREA NO HA PODIDO REALIZARSE CORRECTAMENTE ****");
-                    }
+                    MainController.restartDB(c);
+                    personajeController.getDataFromPersonajeFile();
+                    monstruoController.getDataFromMonstruoFile();
+                    objetoController.getDataFromObjetoFile();
                     break;
                 case 2: // Mostrar tabla completa.
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> personajeController.listPersonajes();
+                        case "monstruo" -> monstruoController.listMonstruos();
+                        case "objeto" -> objetoController.listObjetos();
+                    }
                     break;
                 case 3: // Seleccionar una columna
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> personajeController.selectPersonajeTableColumn(menu.listHeader(personajeController.colsName));
+                        case "monstruo" -> monstruoController.selectMonstruoTableColumn(menu.listHeader(monstruoController.colsName));
+                        case "objeto" ->  objetoController.selectObjetoTableColumn(menu.listHeader(objetoController.colsName));
+                    }
                     break;
                 case 4: // Seleccionar elementos que contengan un texto.
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> {
+                            personajeController.listPersonajes();
+                            personajeController.selectRegisterByCondition(menu.listHeader(personajeController.colsName));
+                        }
+                        case "monstruo" -> {
+                            monstruoController.listMonstruos();
+                            monstruoController.selectRegisterByCondition(menu.listHeader(monstruoController.colsName));
+                        }
+                        case "objeto" -> {
+                            objetoController.listObjetos();
+                            objetoController.selectRegisterByCondition(menu.listHeader(objetoController.colsName));
+                        }
+                    }
                     break;
                 case 5: // Insertar registro.
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> personajeController.addNewPersonaje();
+                        case "monstruo" -> monstruoController.addNewMonstruo();
+                        case "objeto" -> objetoController.addNewObjeto();
+                    }
                     break;
                 case 6: // Equipar objeto a personaje.
+                    int idPersonaje, idObjeto;
+                    idPersonaje = menu.selectPersonajeId(personajeController.listPersonajes());
+                    idObjeto = menu.selectObjetoId(objetoController.listObjetos());
+
+                    personajeController.addRelation(idPersonaje, idObjeto);
+                    objetoController.addRelation(idPersonaje, idObjeto);
 
                     break;
                 case 7: // Modificar elementos de un registro.
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> personajeController.updatePersonaje(menu.selectPersonajeId(personajeController.listPersonajes()), menu.listHeader(personajeController.colsName));
+                        case "monstruo" -> monstruoController.updateMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos()), menu.listHeader(monstruoController.colsName));
+                        case "objeto" -> objetoController.updateObjeto(menu.selectObjetoId(objetoController.listObjetos()), menu.listHeader(objetoController.colsName));
+                    }
                     break;
                 case 8: // Modificar registros según condición.
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> personajeController.updateRegistersByCondition(menu.listHeader(personajeController.colsName));
+                        case "monstruo" -> monstruoController.updateRegistersByCondition(menu.listHeader(monstruoController.colsName));
+                        case "objeto" -> objetoController.updateRegistersByCondition(menu.listHeader(objetoController.colsName));
+                    }
                     break;
                 case 9: // Eliminar registro de una tabla.
-
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> personajeController.deletePersonaje(menu.selectPersonajeId(personajeController.listPersonajes()));
+                        case "monstruo" -> monstruoController.deleteMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos()));
+                        case "objeto" -> objetoController.deleteObjeto(menu.selectObjetoId(objetoController.listObjetos()));
+                    }
+                case 10: // Eliminar registro de una tabla.
+                    switch (menu.TablesMenu()) {
+                        case "personaje" -> {
+                            personajeController.listPersonajes();
+                            personajeController.eliminarPersonajePorCondicionDeTexto(menu.listHeader(personajeController.colsName));
+                        }
+                        case "monstruo" -> {
+                            monstruoController.listMonstruos();
+                            monstruoController.eliminarMonstruoPorCondicionDeTexto(menu.listHeader(monstruoController.colsName));
+                        }
+                        case "objeto" -> {
+                            objetoController.listObjetos();
+                            objetoController.eliminarObjetoPorCondicionDeTexto(menu.listHeader(objetoController.colsName));
+                        }
+                    }
                     break;
-                case 10: // Vaciar tablas.
-                    monstruoController.deleteMonstruoTableData();
+                case 11: // Vaciar tablas.
+                    MainController.restartDB(c);
                     break;
             }
             option = menu.mainMenu();
@@ -114,6 +135,6 @@ public class Main {
             c.close();
         } catch (SQLException e) {
             System.out.println("Error al cerrar la BBDD");
-        }*/
+        }
     }
 }

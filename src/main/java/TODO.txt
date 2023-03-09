@@ -1,15 +1,14 @@
 // TO DO Montar el switch del Main bien.
 // TO DO Insertar en la BBDD desde los csv. (Deberia ser aprovechar la función readClassFile() para obtener la List<Class> y montar una función específica para crear la tabla)
 // TO DO Llamar desde el constructor a la función que rellene las dos listas del controlador con el nombre de la columna y el tipo de dato.
-// TODO Equivalencia a selectSpecificText() (DB_Selects)
+// TO DO Equivalencia a selectSpecificText() (DB_Selects)
 // TO DO Seleccionar una sola columna (DB_Selects)
-// TODO Equivalencia a updateRegistersByCondition() (DB_Updates)
+// TO DO Equivalencia a updateRegistersByCondition() (DB_Updates)
 // TO DO Equivalencia a deleteTableRegisterByCondition() (DB_Deletes)
 // TO DO Vacíar tabla.
 // TO DO Menú principal.
 // TO DO Menú de tablas.
 // TO DO Menú de columnas.
-// TODO Usar quizás SelectFieldMenu() ???
 // TO DO Montar relacion ManyToMany entre Personaje y Objeto.
 // TODO Funcion para rellenar la tabla intermedia.
 

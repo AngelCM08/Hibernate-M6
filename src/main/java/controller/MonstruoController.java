@@ -1,8 +1,6 @@
 package controller;
 
-import actions.DB_Actions;
 import model.Monstruo;
-
 import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -25,34 +23,17 @@ public class MonstruoController {
         setHeaders();
     }
 
-    public static List<Monstruo> readMonstruoFile(){
+    public void getDataFromMonstruoFile(){
         List<Monstruo> listMonstruo = new ArrayList<>();
-        List<String[]> listCSV = DB_Actions.GetDataFromCSV("monstruo");
+        List<String[]> listCSV = MainController.GetDataFromCSV("monstruo");
         listCSV.forEach(row -> {
             listMonstruo.add(new Monstruo(Integer.parseInt(row[0]),row[1],row[2],Integer.parseInt(row[3]),row[4]));
         });
-        return listMonstruo;
-    }
-
-    public static void printMonstruosFromFile(){
-        readMonstruoFile().forEach(System.out::println);
-    }
-
-    /* Method to CREATE a Monstruo in the database */
-    public void addMonstruo(Monstruo monstruo) {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Monstruo MonstruoExists = em.find(Monstruo.class, monstruo.getId());
-        if (MonstruoExists == null) {
-            System.out.println("insert monstruo");
-            em.persist(monstruo);
-        }
-        em.getTransaction().commit();
-        em.close();
+        listMonstruo.forEach(this::addMonstruo);
     }
 
     /* Method to READ all Monstruo */
-    public void listMonstruos() {
+    public List<Monstruo> listMonstruos() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
@@ -62,118 +43,79 @@ public class MonstruoController {
         }
         em.getTransaction().commit();
         em.close();
+        return result;
     }
 
-    /* Method to UPDATE activity for Monstruo */
-    public void updateOneElementMonstruo(Integer monstruoId, String column) {
+    /* Method to CREATE a Monstruo in the database */
+    public void addMonstruo(Monstruo monstruo) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
-        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
-        System.out.print("Indica el dato modificado: ");
-        switch (column) {
-            case "icono" -> monstruo.setIcono(sc.nextLine());
-            case "nombre" -> monstruo.setNombre(sc.nextLine());
-            case "vida" -> {
-                monstruo.setVida(sc.nextInt());
-                sc.nextLine();
-            }
-            case "descripcion" -> monstruo.setDescripcion(sc.nextLine());
-        }
-        em.merge(monstruo);
-        em.getTransaction().commit();
-        em.close();
-        listMonstruos();
-    }
-
-    public void updateRegistersByCondition(String nombreColumna) {
-        EntityManager em = null;
-        EntityTransaction transaction = null;
-
-        System.out.print("Cuál es el texto que quieres actualizar: ");
-        String valorNuevo = sc.nextLine();
-        System.out.print("Cuál es el texto actualizado: ");
-        String valorAntiguo = sc.nextLine();
-
-        try {
-            em = entityManagerFactory.createEntityManager();
-            transaction = em.getTransaction();
-            transaction.begin();
-
-            // Seleccionar el monstruo que coincide con el nombre proporcionado
-            TypedQuery<Monstruo> query = em.createQuery("UPDATE monstruo SET "+ nombreColumna +
-                                                            " = :valorNuevo WHERE " + nombreColumna +
-                                                            " = :valorAntiguo", Monstruo.class);
-            query.setParameter("valorNuevo", valorNuevo);
-            query.setParameter("valorAntiguo", valorAntiguo);
-            int numFilasActualizadas = query.executeUpdate();
-            transaction.commit();
-            System.out.println(numFilasActualizadas + " registros actualizados.");
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
-    }
-
-    /* Method to DELETE Monstruo from the records */
-    public void deleteMonstruo(Integer monstruoId) {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
-        em.remove(monstruo);
-        em.getTransaction().commit();
-        em.close();
-    }
-
-    /* Method to delete Monstruo's table data */
-    public void deleteMonstruoTableData() {
-        EntityManager em = entityManagerFactory.createEntityManager();
-        em.getTransaction().begin();
-        List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
-        result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
-        for (Monstruo monstruo : result) {
-            deleteMonstruo(monstruo.getId());
+        Monstruo MonstruoExists = em.find(Monstruo.class, monstruo.getId());
+        if (MonstruoExists == null) {
+            System.out.print("insert monstruo -> ");
+            System.out.println(monstruo);
+            em.persist(monstruo);
         }
         em.getTransaction().commit();
         em.close();
     }
 
-    /* DELETE by text */
-    public void eliminarMonstruoPorCondicionDeTexto(String columna) {
-        EntityManager em = null;
-        EntityTransaction transaction = null;
+    public void addNewMonstruo(){
+        Scanner sc = new Scanner(System.in);
+        String icono, nombre, descripcion;
+        int id, vida=0;
+        boolean valorValido;
 
-        try {
-            em = entityManagerFactory.createEntityManager();
-            transaction = em.getTransaction();
-            transaction.begin();
+        id = getMonstruosLastId()+1;
 
-            System.out.print("Cuál es el texto condición para eliminar los registros: ");
-            // Seleccionar el monstruo que coincide con el nombre proporcionado
-            TypedQuery<Monstruo> query = em.createQuery(
-                    "SELECT m FROM Monstruo m WHERE "+columna+" LIKE :texto", Monstruo.class);
-            query.setParameter("texto", sc.nextLine());
-            List<Monstruo> monstruos = query.getResultList();
-            // Eliminar el monstruo
-            for (Monstruo m : monstruos) {
-                em.remove(m);
+        System.out.print("Escribe el valor para la columna icono: ");
+        icono = sc.nextLine();
+
+        System.out.print("Escribe el valor para la columna nombre: ");
+        nombre = sc.nextLine();
+
+        do {
+            System.out.print("Escribe el valor para la columna vida: ");
+            try {
+                vida = Integer.parseInt(sc.nextLine());
+                valorValido = true;
+            } catch (Exception e) {
+                System.out.println("\n*** Indica un valor númerico válido. ***");
+                valorValido = false;
             }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
+        }while(!valorValido);
+
+        System.out.print("Escribe el valor para la columna descripcion: ");
+        descripcion = sc.nextLine();
+
+
+
+        addMonstruo(new Monstruo(id, icono, nombre, vida, descripcion));
+    }
+
+    /* Method to SELECT Monstruo's registers */
+    public void selectRegisterByCondition(int numColumna){
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        String nombreColumna = colsName.get(numColumna);
+        boolean esInteger = colsDataType.get(numColumna).equals("int");
+
+        System.out.print("Cuál es el valor que quieres seleccionar: ");
+        String valor = sc.nextLine();
+
+        TypedQuery<Monstruo> query = em.createQuery("FROM Monstruo WHERE "+nombreColumna+" = :texto", Monstruo.class);
+        if (esInteger){
+            query.setParameter("texto", Integer.parseInt(valor));
+        }else{
+            query.setParameter("texto", valor);
         }
+        query.getResultList().forEach(System.out::println);
+
+        em.getTransaction().commit();
+        em.close();
+
+
     }
 
     /* Method to select Monstruo's table column */
@@ -197,7 +139,136 @@ public class MonstruoController {
         em.close();
     }
 
+    /* Method to UPDATE activity for Monstruo */
+    public void updateMonstruo(Integer monstruoId, int column) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+
+        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
+
+        System.out.print("Indica el dato modificado: ");
+        switch (column) {
+            case 1 -> monstruo.setIcono(sc.nextLine());
+            case 2 -> monstruo.setNombre(sc.nextLine());
+            case 3 -> {
+                monstruo.setVida(sc.nextInt());
+                sc.nextLine();
+            }
+            case 4 -> monstruo.setDescripcion(sc.nextLine());
+        }
+        em.merge(monstruo);
+        em.getTransaction().commit();
+        em.close();
+
+        listMonstruos();
+    }
+
+    public void updateRegistersByCondition(int numColumna) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = em.getTransaction();
+
+        String nombreColumna = colsName.get(numColumna);
+        boolean esInteger = colsDataType.get(numColumna).equals("int");
+
+        System.out.print("Cuál es el valor que quieres actualizar: ");
+        String valorAntiguo = sc.nextLine();
+        System.out.print("Cómo será el valor actualizado: ");
+        String valorNuevo = sc.nextLine();
+
+        try {
+            transaction.begin();
+
+            // Seleccionar el monstruo que coincide con el nombre proporcionado
+            Query query = em.createQuery("UPDATE Monstruo SET " + nombreColumna + " = :valorNuevo WHERE " + nombreColumna + " = :valorAntiguo");
+            if (esInteger){
+                query.setParameter("valorNuevo", Integer.parseInt(valorNuevo));
+                query.setParameter("valorAntiguo", Integer.parseInt(valorAntiguo));
+            }else{
+                query.setParameter("valorNuevo", valorNuevo);
+                query.setParameter("valorAntiguo", valorAntiguo);
+            }
+
+            int numFilasActualizadas = query.executeUpdate();
+            transaction.commit();
+            System.out.println(numFilasActualizadas + " registros actualizados.");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            em.close();
+        }
+    }
+
+    /* Method to DELETE Monstruo from the records */
+    public void deleteMonstruo(int monstruoId) {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        Monstruo monstruo = em.find(Monstruo.class, monstruoId);
+        em.remove(monstruo);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    /* DELETE by text */
+    public void eliminarMonstruoPorCondicionDeTexto(int numColumna) {
+        EntityManager em = null;
+        EntityTransaction transaction = null;
+        String nombreColumna = colsName.get(numColumna);
+        boolean esInteger = colsDataType.get(numColumna).equals("int");
+
+        try {
+            em = entityManagerFactory.createEntityManager();
+            transaction = em.getTransaction();
+            transaction.begin();
+
+            System.out.print("Cuál es el texto condición para eliminar los registros: ");
+            // Seleccionar el monstruo que coincide con el nombre proporcionado
+            TypedQuery<Monstruo> query = em.createQuery(
+                    "SELECT m FROM Monstruo m WHERE "+nombreColumna+" = :texto", Monstruo.class);
+
+            if (esInteger){
+                query.setParameter("texto", Integer.parseInt(sc.nextLine()));
+            }else{
+                query.setParameter("texto", sc.nextLine());
+            }
+
+            List<Monstruo> monstruos = query.getResultList();
+            // Eliminar el monstruo
+            for (Monstruo m : monstruos) {
+                em.remove(m);
+            }
+            transaction.commit();
+            System.out.println(monstruos.size()+" Registros eliminados.");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        } finally {
+            if (em != null) {
+                em.close();
+            }
+        }
+    }
+
+
+
     // ************** UTILS ***************
+    /* Method to delete Monstruo's table data */
+    public void deleteMonstruoTableData() {
+        EntityManager em = entityManagerFactory.createEntityManager();
+        em.getTransaction().begin();
+        List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
+        for (Monstruo monstruo : result) {
+            deleteMonstruo(monstruo.getId());
+        }
+        em.getTransaction().commit();
+        em.close();
+    }
+
     /* Method to get the last Monstruo ID */
     public int getMonstruosLastId() {
         EntityManager em = entityManagerFactory.createEntityManager();
