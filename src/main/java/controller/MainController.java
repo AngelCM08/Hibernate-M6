@@ -15,10 +15,10 @@ import java.util.stream.Collectors;
 
 public class MainController {
     /**
-     * Función que permite seleccionar el archivo CSV que contiene los datos de relleno de una tabla.
+     * Función que permite seleccionar el archivo CSV que contiene los datos de una entidad.
      *
      * @param name Nombre del documento del cuál se quiere listar su contenido.
-     * @return Lista de arrays de Strings, cada array es una fila de la BBDD.
+     * @return Lista de arrays de Strings, cada array es una entidad.
      */
     public static List<String[]> GetDataFromCSV(String name){
         List<String[]> entities = null;
@@ -32,6 +32,11 @@ public class MainController {
         return entities;
     }
 
+    /**
+     * Función que permite crea las tablas y relaciones entre ellas en la BBDD.
+     *
+     * @param c Elemento de conexión con la BBDD.
+     */
     public static void restartDB(Connection c){
         try {
             Statement st = c.createStatement();

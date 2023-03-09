@@ -6,6 +6,9 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.*;
 
+/**
+ *  Clase que permite realizar una serie de acciones sobre la entidad Monstruo.
+ */
 public class MonstruoController {
     public Connection connection;
     public EntityManagerFactory entityManagerFactory;
@@ -13,16 +16,26 @@ public class MonstruoController {
     public List<String> colsName = new ArrayList<>();
     public List<String> colsDataType = new ArrayList<>();
 
+    /**
+     * Constructor de la clase.
+     */
     public MonstruoController(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Constructor de la clase utilizado en la clase main,
+     * genera los datos para rellenar los atributos globales colsName y colsDataType.
+     */
     public MonstruoController(Connection connection, EntityManagerFactory entityManagerFactory) {
         this.connection = connection;
         this.entityManagerFactory = entityManagerFactory;
         setHeaders();
     }
 
+    /**
+     * Función que rellena de información las entidades a partir del CSV específico para la clase.
+     */
     public void getDataFromMonstruoFile(){
         List<Monstruo> listMonstruo = new ArrayList<>();
         List<String[]> listCSV = MainController.GetDataFromCSV("monstruo");
@@ -32,7 +45,12 @@ public class MonstruoController {
         listMonstruo.forEach(this::addMonstruo);
     }
 
-    /* Method to READ all Monstruo */
+
+    /**
+     * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
+     *
+     * @return Lista de objetos de la entidad que controla la clase.
+     */
     public List<Monstruo> listMonstruos() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -46,7 +64,11 @@ public class MonstruoController {
         return result;
     }
 
-    /* Method to CREATE a Monstruo in the database */
+    /**
+     * Método que permite introducir un objeto en la BBDD.
+     *
+     * @param monstruo Objeto de la clase que se controla.
+     */
     public void addMonstruo(Monstruo monstruo) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -60,6 +82,9 @@ public class MonstruoController {
         em.close();
     }
 
+    /**
+     * Método para insertar un nuevo elemento a la BBDD.
+     */
     public void addNewMonstruo(){
         Scanner sc = new Scanner(System.in);
         String icono, nombre, descripcion;
@@ -93,7 +118,12 @@ public class MonstruoController {
         addMonstruo(new Monstruo(id, icono, nombre, vida, descripcion));
     }
 
-    /* Method to SELECT Monstruo's registers */
+    /**
+     * Método para seleccionar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void selectRegisterByCondition(int numColumna){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -118,15 +148,19 @@ public class MonstruoController {
 
     }
 
-    /* Method to select Monstruo's table column */
-    public void selectMonstruoTableColumn(int column) {
+    /**
+     * Método para seleccionar todos los campos de la columna seleccionada.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
+    public void selectMonstruoTableColumn(int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
 
         List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
         result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
         for (Monstruo monstruo : result) {
-            switch (column) {
+            switch (numColumna) {
                 case 0 -> System.out.println(monstruo.getId());
                 case 1 -> System.out.println(monstruo.getIcono());
                 case 2 -> System.out.println(monstruo.getNombre());
@@ -134,20 +168,24 @@ public class MonstruoController {
                 case 4 -> System.out.println(monstruo.getDescripcion());
             }
         }
-
         em.getTransaction().commit();
         em.close();
     }
 
-    /* Method to UPDATE activity for Monstruo */
-    public void updateMonstruo(Integer monstruoId, int column) {
+    /**
+     * Método para actualizar los campos del registro seleccionado.
+     *
+     * @param monstruoId Id del registro seleccionado.
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
+    public void updateMonstruo(Integer monstruoId, int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
 
         Monstruo monstruo = em.find(Monstruo.class, monstruoId);
 
         System.out.print("Indica el dato modificado: ");
-        switch (column) {
+        switch (numColumna) {
             case 1 -> monstruo.setIcono(sc.nextLine());
             case 2 -> monstruo.setNombre(sc.nextLine());
             case 3 -> {
@@ -163,6 +201,12 @@ public class MonstruoController {
         listMonstruos();
     }
 
+    /**
+     * Método para actualizar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void updateRegistersByCondition(int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -201,7 +245,11 @@ public class MonstruoController {
         }
     }
 
-    /* Method to DELETE Monstruo from the records */
+    /**
+     * Método para eliminar el registro seleccionado.
+     *
+     * @param monstruoId Id del registro seleccionado.
+     */
     public void deleteMonstruo(int monstruoId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -211,7 +259,12 @@ public class MonstruoController {
         em.close();
     }
 
-    /* DELETE by text */
+    /**
+     * Método para eliminar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void eliminarMonstruoPorCondicionDeTexto(int numColumna) {
         EntityManager em = null;
         EntityTransaction transaction = null;
@@ -255,8 +308,11 @@ public class MonstruoController {
 
 
 
-    // ************** UTILS ***************
-    /* Method to delete Monstruo's table data */
+    /* ************* UTILS ************** */
+
+    /**
+     * Método para eliminar todos los registros de la tabla controlada.
+     */
     public void deleteMonstruoTableData() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -269,7 +325,10 @@ public class MonstruoController {
         em.close();
     }
 
-    /* Method to get the last Monstruo ID */
+
+    /**
+     * Método que devuelve el id del último registro introducido en la BBDD.
+     */
     public int getMonstruosLastId() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -279,6 +338,9 @@ public class MonstruoController {
         return result.size();
     }
 
+    /**
+     * Genera los datos para rellenar los atributos globales colsName y colsDataType.
+     */
     public void setHeaders() {
         Monstruo monstruo = new Monstruo();
         List<Field> fields = Arrays.asList(monstruo.getClass().getDeclaredFields());
