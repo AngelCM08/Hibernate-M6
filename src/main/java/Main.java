@@ -20,6 +20,11 @@ public class Main {
         return emf;
     }
 
+    /**
+     * Función principal del programa donde se gestionan las peticiones del usuario.
+     *
+     * @param args No se utiliza en esta implementación.
+     */
     public static void main(String[] args) {
         ConnectionFactory connectionFactory = ConnectionFactory.getInstance();
         Connection c = connectionFactory.connect();
@@ -97,9 +102,18 @@ public class Main {
                     break;
                 case 8: // Modificar registros según condición.
                     switch (menu.TablesMenu()) {
-                        case "personaje" -> personajeController.updateRegistersByCondition(menu.listHeader(personajeController.colsName));
-                        case "monstruo" -> monstruoController.updateRegistersByCondition(menu.listHeader(monstruoController.colsName));
-                        case "objeto" -> objetoController.updateRegistersByCondition(menu.listHeader(objetoController.colsName));
+                        case "personaje" -> {
+                            personajeController.listPersonajes();
+                            personajeController.updateRegistersByCondition(menu.listHeader(personajeController.colsName));
+                        }
+                        case "monstruo" -> {
+                            monstruoController.listMonstruos();
+                            monstruoController.updateRegistersByCondition(menu.listHeader(monstruoController.colsName));
+                        }
+                        case "objeto" -> {
+                            objetoController.listObjetos();
+                            objetoController.updateRegistersByCondition(menu.listHeader(objetoController.colsName));
+                        }
                     }
                     break;
                 case 9: // Eliminar registro de una tabla.
@@ -108,6 +122,7 @@ public class Main {
                         case "monstruo" -> monstruoController.deleteMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos()));
                         case "objeto" -> objetoController.deleteObjeto(menu.selectObjetoId(objetoController.listObjetos()));
                     }
+                    break;
                 case 10: // Eliminar registro de una tabla.
                     switch (menu.TablesMenu()) {
                         case "personaje" -> {

@@ -88,6 +88,7 @@ public class Menu {
     public int listHeader(List<String> colsName){
         do{
             for (int i = 1; i < colsName.size(); i++) {
+
                 System.out.println(i + ". " + colsName.get(i));
             }
             System.out.print("Indica el valor de la columna que quieres seleccionar: ");
@@ -104,9 +105,14 @@ public class Menu {
         return option;
     }
 
+    /**
+     * Función que muestra un listado de todos los registros de una tabla.
+     * Permite al usuario escoger que registro quiere seleccionar.
+     *
+     * @param list Lista que contiene los datos de la clase Objeto la cuál se quiere listar.
+     */
     public int selectPersonajeId(List<Personaje> list) {
         Scanner sc = new Scanner(System.in);
-        list.forEach(System.out::println);
         do {
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {
@@ -121,9 +127,14 @@ public class Menu {
         return option;
     }
 
+    /**
+     * Función que muestra un listado de todos los registros de una tabla.
+     * Permite al usuario escoger que registro quiere seleccionar.
+     *
+     * @param list Lista que contiene los datos de la clase Objeto la cuál se quiere listar.
+     */
     public int selectMonstruoId(List<Monstruo> list) {
         Scanner sc = new Scanner(System.in);
-        list.forEach(System.out::println);
         do {
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {
@@ -138,9 +149,14 @@ public class Menu {
         return option;
     }
 
+    /**
+     * Función que muestra un listado de todos los registros de una tabla.
+     * Permite al usuario escoger que registro quiere seleccionar.
+     *
+     * @param list Lista que contiene los datos de la clase Objeto la cuál se quiere listar.
+     */
     public int selectObjetoId(List<Objeto> list) {
         Scanner sc = new Scanner(System.in);
-        list.forEach(System.out::println);
         do {
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {

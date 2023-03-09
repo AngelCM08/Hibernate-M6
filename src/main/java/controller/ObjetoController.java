@@ -2,29 +2,40 @@ package controller;
 
 import model.Objeto;
 import model.Personaje;
-
 import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.*;
 
+/**
+ *  Clase que permite realizar una serie de acciones sobre la entidad Objeto.
+ */
 public class ObjetoController {
     private Connection connection;
     private EntityManagerFactory entityManagerFactory;
     Scanner sc = new Scanner(System.in);
     public List<String> colsName = new ArrayList<>();
     public List<String> colsDataType = new ArrayList<>();
-    
+
+    /**
+     * Constructor de la clase.
+     */
     public ObjetoController(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Constructor de la clase utilizado en la clase main,
+     * genera los datos para rellenar los atributos globales colsName y colsDataType.
+     */
     public ObjetoController(Connection connection, EntityManagerFactory entityManagerFactory) {
         this.connection = connection;
         this.entityManagerFactory = entityManagerFactory;
         setHeaders();
     }
-
+    /**
+     * Función que rellena de información las entidades a partir del CSV específico para la clase.
+     */
     public void getDataFromObjetoFile(){
         List<Objeto> listObjeto = new ArrayList<>();
         List<String[]> listCSV = MainController.GetDataFromCSV("objeto");
@@ -34,7 +45,11 @@ public class ObjetoController {
         listObjeto.forEach(this::addObjeto);
     }
 
-    /* Method to READ all Objeto */
+    /**
+     * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
+     *
+     * @return Lista de objetos de la entidad que controla la clase.
+     */
     public List<Objeto> listObjetos() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -48,7 +63,11 @@ public class ObjetoController {
         return result;
     }
 
-    /* Method to CREATE a Objeto in the database */
+    /**
+     * Método que permite introducir un objeto en la BBDD.
+     *
+     * @param objeto Objeto de la clase que se controla.
+     */
     public void addObjeto(Objeto objeto) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -62,6 +81,9 @@ public class ObjetoController {
         em.close();
     }
 
+    /**
+     * Método para relacionar un personaje y un objeto.
+     */
     public void addRelation(int idPersonaje, int idObjeto){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -69,14 +91,17 @@ public class ObjetoController {
         Objeto objeto = em.find(Objeto.class, idObjeto);
         Personaje personaje = em.find(Personaje.class, idPersonaje);
 
-        objeto.getPersonajeQueEquipa().add(personaje);
-        objeto.setPersonajeQueEquipa(objeto.getPersonajeQueEquipa());
+        objeto.getPersonajesQueEquipan().add(personaje);
+        objeto.setPersonajesQueEquipan(objeto.getPersonajesQueEquipan());
 
         em.merge(objeto);
         em.getTransaction().commit();
         em.close();
     }
 
+    /**
+     * Método para insertar un nuevo elemento a la BBDD.
+     */
     public void addNewObjeto(){
         Scanner sc = new Scanner(System.in);
         String icono, nombre, descripcion;
@@ -97,7 +122,12 @@ public class ObjetoController {
         addObjeto(new Objeto(id, icono, nombre, descripcion));
     }
 
-    /* Method to SELECT Objeto's registers */
+    /**
+     * Método para seleccionar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void selectRegisterByCondition(int numColumna){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -122,15 +152,19 @@ public class ObjetoController {
 
     }
 
-    /* Method to select Objeto's table column */
-    public void selectObjetoTableColumn(int column) {
+    /**
+     * Método para seleccionar todos los campos de la columna seleccionada.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
+    public void selectObjetoTableColumn(int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
 
         List<Objeto> result = em.createQuery("from Objeto", Objeto.class).getResultList();
         result = result.stream().sorted(Comparator.comparingInt(Objeto::getId)).toList();
         for (Objeto objeto : result) {
-            switch (column) {
+            switch (numColumna) {
                 case 0 -> System.out.println(objeto.getId());
                 case 1 -> System.out.println(objeto.getIcono());
                 case 2 -> System.out.println(objeto.getNombre());
@@ -142,13 +176,18 @@ public class ObjetoController {
         em.close();
     }
 
-    /* Method to UPDATE activity for Objeto */
-    public void updateObjeto(Integer objetoId, int column) {
+    /**
+     * Método para actualizar los campos del registro seleccionado.
+     *
+     * @param objetoId Id del registro seleccionado.
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
+    public void updateObjeto(Integer objetoId, int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         Objeto objeto = em.find(Objeto.class, objetoId);
         System.out.print("Indica el dato modificado: ");
-        switch (column) {
+        switch (numColumna) {
             case 1 -> objeto.setIcono(sc.nextLine());
             case 2 -> objeto.setNombre(sc.nextLine());
             case 3 -> objeto.setDescripcion(sc.nextLine());
@@ -159,6 +198,12 @@ public class ObjetoController {
         listObjetos();
     }
 
+    /**
+     * Método para actualizar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void updateRegistersByCondition(int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -197,7 +242,11 @@ public class ObjetoController {
         }
     }
 
-    /* Method to DELETE Objeto from the records */
+    /**
+     * Método para eliminar el registro seleccionado.
+     *
+     * @param objetoId Id del registro seleccionado.
+     */
     public void deleteObjeto(int objetoId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -207,7 +256,12 @@ public class ObjetoController {
         em.close();
     }
 
-    /* DELETE by text */
+    /**
+     * Método para eliminar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void eliminarObjetoPorCondicionDeTexto(int numColumna) {
         EntityManager em = null;
         EntityTransaction transaction = null;
@@ -252,7 +306,10 @@ public class ObjetoController {
 
 
     // ************** UTILS ***************
-    /* Method to delete Objeto's table data */
+
+    /**
+     * Método para eliminar todos los registros de la tabla controlada.
+     */
     public void deleteObjetoTableData() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -265,7 +322,9 @@ public class ObjetoController {
         em.close();
     }
 
-    /* Method to get the last Objeto ID */
+    /**
+     * Método que devuelve el id del último registro introducido en la BBDD.
+     */
     public int getObjetosLastId() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -275,11 +334,14 @@ public class ObjetoController {
         return result.size();
     }
 
+    /**
+     * Genera los datos para rellenar los atributos globales colsName y colsDataType.
+     */
     public void setHeaders() {
         Objeto objeto = new Objeto();
         List<Field> fields = Arrays.asList(objeto.getClass().getDeclaredFields());
         for (Field field : fields){
-            colsName.add(field.getName());
+            if(!field.getName().equals("personajesQueEquipan")) colsName.add(field.getName());
             if(field.getType().getName().equals("java.lang.String")) colsDataType.add("String");
             else colsDataType.add("int");
         }

@@ -23,7 +23,7 @@ public class Objeto implements Serializable {
     String descripcion;
 
     @ManyToMany(mappedBy = "objetosEquipados")
-    public List<Personaje> personajeQueEquipa = new ArrayList<>();
+    public List<Personaje> personajesQueEquipan = new ArrayList<>();
 
     /**
      * Constrctor simple de la Clase necesario para el formateado a XML.
@@ -77,19 +77,39 @@ public class Objeto implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public List<Personaje> getPersonajeQueEquipa() {
-        return personajeQueEquipa;
+    public List<Personaje> getPersonajesQueEquipan() {
+        return personajesQueEquipan;
     }
 
-    public void setPersonajeQueEquipa(List<Personaje> personajeQueEquipa) {
-        this.personajeQueEquipa = personajeQueEquipa;
+    public void setPersonajesQueEquipan(List<Personaje> personajesQueEquipan) {
+        this.personajesQueEquipan = personajesQueEquipan;
     }
 
+    public String personajesQueEquipanToString(){
+        if(personajesQueEquipan.size() != 0){
+            StringBuilder res = new StringBuilder();
+
+            for (Personaje personaje: personajesQueEquipan){
+                res.append(personaje.getNombre()).append(", ");
+            }
+
+            return res.substring(0, res.length()-2);
+        }
+        return "";
+    }
+
+    /**
+     * Función que devuelve una cadena de texto con los nombres de los atributos y los valores
+     * de la clase en un formato específico para evitar errores y pérdidas de información.
+     *
+     * @return Cadena de texto con los nombres de los atributos y sus valores.
+     */
     @Override
     public String toString() {
         return "idObjeto: "+id+"\t|\t" +
                 "nombre: "+nombre+"\t|\t" +
                 "descripcion: "+descripcion+"\t|\t" +
-                "icono: "+icono;
+                "icono: "+icono+"\t|\t" +
+                "Personajes lo equipan: ["+ personajesQueEquipanToString() +"]";
     }
 }

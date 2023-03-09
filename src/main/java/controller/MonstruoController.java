@@ -45,7 +45,6 @@ public class MonstruoController {
         listMonstruo.forEach(this::addMonstruo);
     }
 
-
     /**
      * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
      *
@@ -113,8 +112,6 @@ public class MonstruoController {
         System.out.print("Escribe el valor para la columna descripcion: ");
         descripcion = sc.nextLine();
 
-
-
         addMonstruo(new Monstruo(id, icono, nombre, vida, descripcion));
     }
 
@@ -144,8 +141,6 @@ public class MonstruoController {
 
         em.getTransaction().commit();
         em.close();
-
-
     }
 
     /**
@@ -324,7 +319,6 @@ public class MonstruoController {
         em.getTransaction().commit();
         em.close();
     }
-
 
     /**
      * Método que devuelve el id del último registro introducido en la BBDD.

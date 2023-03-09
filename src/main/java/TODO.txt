@@ -10,6 +10,5 @@
 // TO DO Menú de tablas.
 // TO DO Menú de columnas.
 // TO DO Montar relacion ManyToMany entre Personaje y Objeto.
-// TODO Funcion para rellenar la tabla intermedia.
-
-// TODO Comprobar si se cumplen los requerimientos de la pràctica.
+// TO DO Funcion para rellenar la tabla intermedia.
+// TO DO Comprobar si se cumplen los requerimientos de la pràctica.

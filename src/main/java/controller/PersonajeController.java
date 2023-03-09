@@ -7,6 +7,9 @@ import java.lang.reflect.Field;
 import java.sql.Connection;
 import java.util.*;
 
+/**
+ *  Clase que permite realizar una serie de acciones sobre la entidad Personaje.
+ */
 public class PersonajeController {
     private Connection connection;
     private EntityManagerFactory entityManagerFactory;
@@ -14,16 +17,26 @@ public class PersonajeController {
     public List<String> colsName = new ArrayList<>();
     public List<String> colsDataType = new ArrayList<>();
 
+    /**
+     * Constructor de la clase.
+     */
     public PersonajeController(Connection connection) {
         this.connection = connection;
     }
 
+    /**
+     * Constructor de la clase utilizado en la clase main,
+     * genera los datos para rellenar los atributos globales colsName y colsDataType.
+     */
     public PersonajeController(Connection connection, EntityManagerFactory entityManagerFactory) {
         this.connection = connection;
         this.entityManagerFactory = entityManagerFactory;
         setHeaders();
     }
 
+    /**
+     * Función que rellena de información las entidades a partir del CSV específico para la clase.
+     */
     public void getDataFromPersonajeFile(){
         List<Personaje> listPersonaje = new ArrayList<>();
         List<String[]> listCSV = MainController.GetDataFromCSV("personaje");
@@ -35,7 +48,11 @@ public class PersonajeController {
         listPersonaje.forEach(this::addPersonaje);
     }
 
-    /* Method to READ all Personaje */
+    /**
+     * Método para listar las entidades que existen en la tabla de la BBDD equivalente a la clase.
+     *
+     * @return Lista de objetos de la entidad que controla la clase.
+     */
     public List<Personaje> listPersonajes() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -49,7 +66,11 @@ public class PersonajeController {
         return result;
     }
 
-    /* Method to CREATE a Personaje in the database */
+    /**
+     * Método que permite introducir un objeto en la BBDD.
+     *
+     * @param personaje Objeto de la clase que se controla.
+     */
     public void addPersonaje(Personaje personaje) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -63,6 +84,9 @@ public class PersonajeController {
         em.close();
     }
 
+    /**
+     * Método para relacionar un personaje y un objeto.
+     */
     public void addRelation(int idPersonaje, int idObjeto){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -78,6 +102,9 @@ public class PersonajeController {
         em.close();
     }
 
+    /**
+     * Método para insertar un nuevo elemento a la BBDD.
+     */
     public void addNewPersonaje(){
         Scanner sc = new Scanner(System.in);
         String icono, nombre, daño, cadencia, vel_proyectil, rango, velocidad;
@@ -132,7 +159,12 @@ public class PersonajeController {
         addPersonaje(new Personaje(id, icono, nombre, vida, daño, cadencia, vel_proyectil, rango, velocidad, suerte));
     }
 
-    /* Method to SELECT Personaje's registers */
+    /**
+     * Método para seleccionar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void selectRegisterByCondition(int numColumna){
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -155,15 +187,19 @@ public class PersonajeController {
         em.close();
     }
 
-    /* Method to select Personaje's table column */
-    public void selectPersonajeTableColumn(int column) {
+    /**
+     * Método para seleccionar todos los campos de la columna seleccionada.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
+    public void selectPersonajeTableColumn(int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
 
         List<Personaje> result = em.createQuery("from Personaje", Personaje.class).getResultList();
         result = result.stream().sorted(Comparator.comparingInt(Personaje::getId)).toList();
         for (Personaje personaje : result) {
-            switch (column) {
+            switch (numColumna) {
                 case 0 -> System.out.println(personaje.getId());
                 case 1 -> System.out.println(personaje.getIcono());
                 case 2 -> System.out.println(personaje.getNombre());
@@ -181,13 +217,18 @@ public class PersonajeController {
         em.close();
     }
 
-    /* Method to UPDATE activity for Personaje */
-    public void updatePersonaje(Integer personajeId, int column) {
+    /**
+     * Método para actualizar los campos del registro seleccionado.
+     *
+     * @param personajeId Id del registro seleccionado.
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
+    public void updatePersonaje(Integer personajeId, int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         Personaje personaje = em.find(Personaje.class, personajeId);
         System.out.print("Indica el dato modificado: ");
-        switch (column) {
+        switch (numColumna) {
             case 1 -> personaje.setIcono(sc.nextLine());
             case 2 -> personaje.setNombre(sc.nextLine());
             case 3 -> {
@@ -210,6 +251,12 @@ public class PersonajeController {
         listPersonajes();
     }
 
+    /**
+     * Método para actualizar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void updateRegistersByCondition(int numColumna) {
         EntityManager em = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = em.getTransaction();
@@ -248,7 +295,11 @@ public class PersonajeController {
         }
     }
 
-    /* Method to DELETE Personaje from the records */
+    /**
+     * Método para eliminar el registro seleccionado.
+     *
+     * @param personajeId Id del registro seleccionado.
+     */
     public void deletePersonaje(int personajeId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -258,7 +309,12 @@ public class PersonajeController {
         em.close();
     }
 
-    /* DELETE by text */
+    /**
+     * Método para eliminar todos los registros que cumplan una condición
+     * cuya columna seleccionada coincida con el valor indicado.
+     *
+     * @param numColumna Columna seleccionada para hacer la selección.
+     */
     public void eliminarPersonajePorCondicionDeTexto(int numColumna) {
         EntityManager em = null;
         EntityTransaction transaction = null;
@@ -303,7 +359,10 @@ public class PersonajeController {
 
 
     // ************** UTILS ***************
-    /* Method to delete Personaje's table data */
+
+    /**
+     * Método para eliminar todos los registros de la tabla controlada.
+     */
     public void deletePersonajeTableData() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -316,7 +375,9 @@ public class PersonajeController {
         em.close();
     }
 
-    /* Method to get the last Personaje ID */
+    /**
+     * Método que devuelve el id del último registro introducido en la BBDD.
+     */
     public int getPersonajesLastId() {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
@@ -326,13 +387,17 @@ public class PersonajeController {
         return result.size();
     }
 
+    /**
+     * Genera los datos para rellenar los atributos globales colsName y colsDataType.
+     */
     public void setHeaders() {
         Personaje personaje = new Personaje();
         List<Field> fields = Arrays.asList(personaje.getClass().getDeclaredFields());
         for (Field field : fields){
-            colsName.add(field.getName());
+            if(!field.getName().equals("objetosEquipados")) colsName.add(field.getName());
             if(field.getType().getName().equals("java.lang.String")) colsDataType.add("String");
             else colsDataType.add("int");
         }
+        colsDataType.remove(colsDataType.size()-1);
     }
 }
