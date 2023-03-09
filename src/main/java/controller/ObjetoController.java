@@ -2,6 +2,8 @@ package controller;
 
 import model.Objeto;
 import model.Personaje;
+import org.hibernate.engine.jdbc.spi.SqlExceptionHelper;
+
 import javax.persistence.*;
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -250,8 +252,32 @@ public class ObjetoController {
     public void deleteObjeto(int objetoId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
+
         Objeto objeto = em.find(Objeto.class, objetoId);
+        deleteRelation(objeto);
+
         em.remove(objeto);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public void deleteRelation(Objeto objeto){
+        objeto.getPersonajesQueEquipan().forEach(personaje -> {
+            personaje.getObjetosEquipados().remove(objeto);
+        });
+    }
+
+    public void deleteRelation(int objetoId){
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        em.getTransaction().begin();
+        Objeto objeto = em.find(Objeto.class, objetoId);
+
+        objeto.getPersonajesQueEquipan().forEach(personaje -> {
+            personaje.getObjetosEquipados().remove(objeto);
+        });
+
+        em.merge(objeto);
         em.getTransaction().commit();
         em.close();
     }
@@ -329,9 +355,10 @@ public class ObjetoController {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         List<Objeto> result = em.createQuery("from Objeto", Objeto.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Objeto::getId)).toList();
         em.getTransaction().commit();
         em.close();
-        return result.size();
+        return result.get(result.size()-1).getId();
     }
 
     /**

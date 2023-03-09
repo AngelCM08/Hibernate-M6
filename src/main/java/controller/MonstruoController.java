@@ -327,9 +327,10 @@ public class MonstruoController {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         List<Monstruo> result = em.createQuery("from Monstruo", Monstruo.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Monstruo::getId)).toList();
         em.getTransaction().commit();
         em.close();
-        return result.size();
+        return result.get(result.size()-1).getId();
     }
 
     /**

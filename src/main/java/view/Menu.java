@@ -27,22 +27,23 @@ public class Menu {
             System.out.println("4. Seleccionar elementos que contengan un texto.");
             System.out.println("5. Insertar registro.");
             System.out.println("6. Equipar objeto a personaje.");
-            System.out.println("7. Modificar atributos de un registro.");
-            System.out.println("8. Modificar registros según condición.");
-            System.out.println("9. Eliminar registro de una tabla.");
-            System.out.println("10. Eliminar registro por condicion.");
-            System.out.println("11. Vaciar tablas.");
-            System.out.println("12. Salir.");
+            System.out.println("7. Desquipar objeto a personaje.");
+            System.out.println("8. Modificar atributos de un registro.");
+            System.out.println("9. Modificar registros según condición.");
+            System.out.println("10. Eliminar registro de una tabla.");
+            System.out.println("11. Eliminar registro por condicion.");
+            System.out.println("12. Vaciar tablas.");
+            System.out.println("13. Salir.");
             System.out.print("Escoger opción: ");
             try{
                 option = Integer.parseInt(sc.nextLine());
-                if(option < 1 || option > 12){
+                if(option < 1 || option > 13){
                     System.out.println("\n*** Indica un valor númerico válido. ***");
                 }
             }catch(Exception e){
                 System.out.println("\n*** Selecciona una opción válida. ***");
             }
-        }while(option < 1 || option > 12);
+        }while(option < 1 || option > 13);
         return option;
     }
 
@@ -111,7 +112,7 @@ public class Menu {
      *
      * @param list Lista que contiene los datos de la clase Objeto la cuál se quiere listar.
      */
-    public int selectPersonajeId(List<Personaje> list) {
+    public int selectPersonajeId(List<Personaje> list, int lastID) {
         Scanner sc = new Scanner(System.in);
         do {
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
@@ -123,7 +124,7 @@ public class Menu {
             } catch (Exception e) {
                 System.out.println("\n*** Indica un valor númerico válido. ***");
             }
-        } while (option < 0 || option > list.size());
+        } while (option < 0 || option > lastID);
         return option;
     }
 
@@ -133,7 +134,7 @@ public class Menu {
      *
      * @param list Lista que contiene los datos de la clase Objeto la cuál se quiere listar.
      */
-    public int selectMonstruoId(List<Monstruo> list) {
+    public int selectMonstruoId(List<Monstruo> list, int lastID) {
         Scanner sc = new Scanner(System.in);
         do {
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
@@ -145,7 +146,7 @@ public class Menu {
             } catch (Exception e) {
                 System.out.println("\n*** Indica un valor númerico válido. ***");
             }
-        } while (option < 0 || option > list.size());
+        } while (option < 0 || option > lastID);
         return option;
     }
 
@@ -155,19 +156,17 @@ public class Menu {
      *
      * @param list Lista que contiene los datos de la clase Objeto la cuál se quiere listar.
      */
-    public int selectObjetoId(List<Objeto> list) {
+    public int selectObjetoId(List<Objeto> list, int lastID) {
         Scanner sc = new Scanner(System.in);
+        System.out.println(lastID);
         do {
             System.out.print("Indica el ID del registro que quieres seleccionar: ");
             try {
                 option = Integer.parseInt(sc.nextLine());
-                if (option < 0 || option > list.size()) {
-                    System.out.println("\n*** Indica un valor númerico válido. ***");
-                }
             } catch (Exception e) {
                 System.out.println("\n*** Indica un valor númerico válido. ***");
             }
-        } while (option < 0 || option > list.size());
+        } while (option < 0 || option > lastID);
         return option;
     }
 }

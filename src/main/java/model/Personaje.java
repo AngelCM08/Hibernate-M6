@@ -61,7 +61,7 @@ public class Personaje implements Serializable {
      * Cabe destacar que se filtran algunos de los atributos utilizando
      * una lista auxiliar para obtener información más limpia.
      *
-     * @param id
+     * @param id Identificador del elemento.
      * @param icono
      * @param nombre
      * @param vida

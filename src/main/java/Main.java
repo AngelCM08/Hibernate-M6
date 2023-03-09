@@ -1,10 +1,8 @@
 import java.sql.Connection;
 import java.sql.SQLException;
-
 import controller.*;
 import database.ConnectionFactory;
 import view.Menu;
-
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
@@ -36,10 +34,10 @@ public class Main {
 
         Menu menu = new Menu();
 
-        int id;
+        int id, idPersonaje, idObjeto;
         int option = menu.mainMenu();
 
-        while (option != 12) {
+        while (option != 13) {
             switch (option) {
                 case 1: // Poblar o restaurar tablas. // Con Statement porque es lo que hay, Hibernate va raro pa esto.
                     MainController.restartDB(c);
@@ -85,22 +83,29 @@ public class Main {
                     }
                     break;
                 case 6: // Equipar objeto a personaje.
-                    int idPersonaje, idObjeto;
-                    idPersonaje = menu.selectPersonajeId(personajeController.listPersonajes());
-                    idObjeto = menu.selectObjetoId(objetoController.listObjetos());
+                    idObjeto = menu.selectObjetoId(objetoController.listObjetos(), objetoController.getObjetosLastId());
+                    idPersonaje = menu.selectPersonajeId(personajeController.listPersonajes(), personajeController.getPersonajesLastId());
 
-                    personajeController.addRelation(idPersonaje, idObjeto);
                     objetoController.addRelation(idPersonaje, idObjeto);
+                    personajeController.addRelation(idPersonaje, idObjeto);
 
                     break;
-                case 7: // Modificar elementos de un registro.
+                case 7: // Desequipar objeto a personaje.
+                    idObjeto = menu.selectObjetoId(objetoController.listObjetos(), objetoController.getObjetosLastId());
+                    idPersonaje = menu.selectPersonajeId(personajeController.listPersonajes(), personajeController.getPersonajesLastId());
+
+                    objetoController.deleteRelation(idObjeto);
+                    personajeController.deleteRelation(idPersonaje);
+
+                    break;
+                case 8: // Modificar elementos de un registro.
                     switch (menu.TablesMenu()) {
-                        case "personaje" -> personajeController.updatePersonaje(menu.selectPersonajeId(personajeController.listPersonajes()), menu.listHeader(personajeController.colsName));
-                        case "monstruo" -> monstruoController.updateMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos()), menu.listHeader(monstruoController.colsName));
-                        case "objeto" -> objetoController.updateObjeto(menu.selectObjetoId(objetoController.listObjetos()), menu.listHeader(objetoController.colsName));
+                        case "personaje" -> personajeController.updatePersonaje(menu.selectPersonajeId(personajeController.listPersonajes(), personajeController.getPersonajesLastId()), menu.listHeader(personajeController.colsName));
+                        case "monstruo" -> monstruoController.updateMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos(), monstruoController.getMonstruosLastId()), menu.listHeader(monstruoController.colsName));
+                        case "objeto" -> objetoController.updateObjeto(menu.selectObjetoId(objetoController.listObjetos(), objetoController.getObjetosLastId()), menu.listHeader(objetoController.colsName));
                     }
                     break;
-                case 8: // Modificar registros según condición.
+                case 9: // Modificar registros según condición.
                     switch (menu.TablesMenu()) {
                         case "personaje" -> {
                             personajeController.listPersonajes();
@@ -116,14 +121,14 @@ public class Main {
                         }
                     }
                     break;
-                case 9: // Eliminar registro de una tabla.
+                case 10: // Eliminar registro de una tabla.
                     switch (menu.TablesMenu()) {
-                        case "personaje" -> personajeController.deletePersonaje(menu.selectPersonajeId(personajeController.listPersonajes()));
-                        case "monstruo" -> monstruoController.deleteMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos()));
-                        case "objeto" -> objetoController.deleteObjeto(menu.selectObjetoId(objetoController.listObjetos()));
+                        case "personaje" -> personajeController.deletePersonaje(menu.selectPersonajeId(personajeController.listPersonajes(), personajeController.getPersonajesLastId()));
+                        case "monstruo" -> monstruoController.deleteMonstruo(menu.selectMonstruoId(monstruoController.listMonstruos(), monstruoController.getMonstruosLastId()));
+                        case "objeto" -> objetoController.deleteObjeto(menu.selectObjetoId(objetoController.listObjetos(), objetoController.getObjetosLastId()));
                     }
                     break;
-                case 10: // Eliminar registro de una tabla.
+                case 11: // Eliminar registro de una tabla.
                     switch (menu.TablesMenu()) {
                         case "personaje" -> {
                             personajeController.listPersonajes();
@@ -139,7 +144,7 @@ public class Main {
                         }
                     }
                     break;
-                case 11: // Vaciar tablas.
+                case 12: // Vaciar tablas.
                     MainController.restartDB(c);
                     break;
             }

@@ -303,8 +303,32 @@ public class PersonajeController {
     public void deletePersonaje(int personajeId) {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
+
         Personaje personaje = em.find(Personaje.class, personajeId);
+        deleteRelation(personaje);
+
         em.remove(personaje);
+        em.getTransaction().commit();
+        em.close();
+    }
+
+    public void deleteRelation(Personaje personaje){
+        personaje.getObjetosEquipados().forEach(objeto -> {
+            objeto.getPersonajesQueEquipan().remove(personaje);
+        });
+    }
+
+    public void deleteRelation(int personajeId){
+        EntityManager em = entityManagerFactory.createEntityManager();
+
+        em.getTransaction().begin();
+        Personaje personaje = em.find(Personaje.class, personajeId);
+
+        personaje.getObjetosEquipados().forEach(objeto -> {
+            objeto.getPersonajesQueEquipan().remove(personaje);
+        });
+
+        em.merge(personaje);
         em.getTransaction().commit();
         em.close();
     }
@@ -382,9 +406,10 @@ public class PersonajeController {
         EntityManager em = entityManagerFactory.createEntityManager();
         em.getTransaction().begin();
         List<Personaje> result = em.createQuery("from Personaje", Personaje.class).getResultList();
+        result = result.stream().sorted(Comparator.comparingInt(Personaje::getId)).toList();
         em.getTransaction().commit();
         em.close();
-        return result.size();
+        return result.get(result.size()-1).getId();
     }
 
     /**
