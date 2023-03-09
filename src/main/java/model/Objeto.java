@@ -22,7 +22,7 @@ public class Objeto implements Serializable {
     @Column(name = "descripcion", length = 500)
     String descripcion;
 
-    @ManyToMany(mappedBy = "objetoEquipado")
+    @ManyToMany(mappedBy = "objetosEquipados")
     public List<Personaje> personajeQueEquipa = new ArrayList<>();
 
     /**

@@ -48,7 +48,7 @@ public class Personaje implements Serializable {
             joinColumns = @JoinColumn(name = "idpersonaje"),
             inverseJoinColumns = @JoinColumn(name = "idobjeto")
     )
-    private List<Objeto> objetoEquipado = new ArrayList<>();
+    private List<Objeto> objetosEquipados = new ArrayList<>();
 
     /**
      * Constrctor simple de la Clase necesario para el formateado a XML.
@@ -167,12 +167,25 @@ public class Personaje implements Serializable {
         this.suerte = suerte;
     }
 
-    public List<Objeto> getObjetoEquipado() {
-        return objetoEquipado;
+    public List<Objeto> getObjetosEquipados() {
+        return objetosEquipados;
     }
 
-    public void setObjetoEquipado(List<Objeto> objetoEquipado) {
-        this.objetoEquipado = objetoEquipado;
+    public void setObjetosEquipados(List<Objeto> objetosEquipados) {
+        this.objetosEquipados = objetosEquipados;
+    }
+
+    public String ObjetoEquipadoToString(){
+        if(objetosEquipados.size() != 0){
+            StringBuilder res = new StringBuilder();
+
+            for (Objeto obj: objetosEquipados){
+                res.append(obj.getNombre()).append(", ");
+            }
+
+            return res.substring(0, res.length()-2);
+        }
+        return "";
     }
 
     /**
@@ -183,7 +196,6 @@ public class Personaje implements Serializable {
      */
     @Override
     public String toString() {
-        String objetosEquipados = getObjetoEquipado().toString();
         return "idPersonaje: "+id+"\t|\t" +
                 "nombre: "+nombre+"\t|\t" +
                 "vida: "+vida+"\t|\t" +
@@ -193,6 +205,6 @@ public class Personaje implements Serializable {
                 "rango: "+rango+"\t|\t" +
                 "velocidad: "+velocidad+"\t|\t" +
                 "suerte: "+suerte+"\t|\t" +
-                "Objetos Equipados: ["+getObjetoEquipado().toString()+"]";
+                "Objetos Equipados: ["+ ObjetoEquipadoToString() +"]";
     }
 }

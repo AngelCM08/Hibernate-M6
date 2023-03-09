@@ -70,8 +70,8 @@ public class PersonajeController {
         Personaje personaje = em.find(Personaje.class, idPersonaje);
         Objeto objeto = em.find(Objeto.class, idObjeto);
 
-        personaje.getObjetoEquipado().add(objeto);
-        personaje.setObjetoEquipado(personaje.getObjetoEquipado());
+        personaje.getObjetosEquipados().add(objeto);
+        personaje.setObjetosEquipados(personaje.getObjetosEquipados());
 
         em.merge(personaje);
         em.getTransaction().commit();
