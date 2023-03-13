@@ -312,12 +312,25 @@ public class PersonajeController {
         em.close();
     }
 
+
+    /**
+     * Método para eliminar la relacion entre un personaje y un objeto
+     * específicamente para cuando se elimina el personaje.
+     *
+     * @param personaje Personaje que se tiene que eliminar de la relación.
+     */
     public void deleteRelation(Personaje personaje){
         personaje.getObjetosEquipados().forEach(objeto -> {
             objeto.getPersonajesQueEquipan().remove(personaje);
         });
     }
 
+
+    /**
+     * Método para eliminar la relación entre un personaje y un objeto.
+     *
+     * @param personajeId Id del personaje que se tiene que eliminar de la relación.
+     */
     public void deleteRelation(int personajeId){
         EntityManager em = entityManagerFactory.createEntityManager();
 
