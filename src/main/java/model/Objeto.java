@@ -5,6 +5,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Clase que almacena la entidad del UML Objeto.
+ *
+ * @author Ángel Castro Merino
+ */
 @Entity
 @Access(AccessType.FIELD)
 @Table(name = "objeto")

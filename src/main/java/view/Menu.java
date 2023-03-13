@@ -4,6 +4,9 @@ import model.*;
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Clase que comunica al usuario con la aplicación.
+ */
 public class Menu {
     private int option;
     Scanner sc = new Scanner(System.in);

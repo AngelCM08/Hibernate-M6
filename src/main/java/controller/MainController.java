@@ -2,9 +2,6 @@ package controller;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import model.Objeto;
-
-import javax.persistence.EntityManager;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -15,6 +12,9 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ *  Clase que permite realizar una serie de acciones generales sobre la BBDD.
+ */
 public class MainController {
     /**
      * Función que permite seleccionar el archivo CSV que contiene los datos de una entidad.

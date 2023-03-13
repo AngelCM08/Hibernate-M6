@@ -6,6 +6,11 @@ import view.Menu;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 
+/**
+ * Clase principal del programa.
+ *
+ * @author Ángel Castro Merino
+ */
 public class Main {
     public static EntityManagerFactory createEntityManagerFactory() {
         EntityManagerFactory emf;
